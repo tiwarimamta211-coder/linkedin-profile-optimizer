@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinkedIn Profile Optimizer | IncomeAIHub</title>
+<meta name="description" content="AI-powered LinkedIn Profile Optimizer — score your profile, get keyword suggestions, and rewrite your headline & about section for more clients and jobs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b0f;
+  --bg-soft:#121218;
+  --card:#16161d;
+  --card-2:#1c1c25;
+  --border:#2a2a35;
+  --gold:#d4af37;
+  --gold-soft:#f2d675;
+  --emerald:#2ecc9c;
+  --violet:#8b7cf6;
+  --text:#f2f2f5;
+  --text-dim:#9a9aa8;
+  --danger:#ff6b6b;
+  --radius:16px;
+  --shadow:0 10px 30px rgba(0,0,0,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:radial-gradient(circle at 20% 0%, #1a1a24 0%, var(--bg) 45%), var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  line-height:1.5;
+  min-height:100vh;
+  padding-bottom:60px;
+}
+h1,h2,h3,.logo,.brand{font-family:'Syne',sans-serif}
+.mono{font-family:'DM Mono',monospace}
+a{color:inherit}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* Header */
+header{
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:50;
+  background:rgba(11,11,15,.85);
+  backdrop-filter:blur(10px);
+}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;max-width:1100px;margin:0 auto}
+.brand{font-size:20px;font-weight:800;display:flex;align-items:center;gap:8px}
+.brand span{background:linear-gradient(135deg,var(--gold),var(--emerald));-webkit-background-clip:text;background-clip:text;color:transparent}
+.header-btns{display:flex;gap:10px;align-items:center}
+.btn{
+  border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;
+  padding:10px 18px;border-radius:10px;font-size:14px;transition:.2s;display:inline-flex;align-items:center;gap:6px;
+}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-soft));color:#1a1500}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(212,175,55,.3)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-ghost:hover{border-color:var(--gold)}
+.btn-emerald{background:linear-gradient(135deg,var(--emerald),#1ea885);color:#04241b}
+.btn-block{width:100%;justify-content:center;padding:14px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Hero */
+.hero{padding:50px 0 30px;text-align:center}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);
+  padding:6px 14px;border-radius:100px;font-size:12px;color:var(--gold-soft);margin-bottom:18px;
+}
+.hero h1{font-size:clamp(28px,5vw,46px);font-weight:800;line-height:1.15;margin-bottom:16px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold),var(--emerald));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--text-dim);max-width:600px;margin:0 auto 26px;font-size:16px}
+.trust-row{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;color:var(--text-dim);font-size:13px;margin-top:20px}
+.trust-row span{display:flex;align-items:center;gap:6px}
+
+/* Ad slot */
+.ad-slot{
+  max-width:1100px;margin:20px auto;padding:14px;border:1px dashed var(--border);border-radius:12px;
+  text-align:center;color:var(--text-dim);font-size:12px;
+}
+
+/* Layout */
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;margin-top:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:26px;box-shadow:var(--shadow);
+}
+.card h2{font-size:19px;margin-bottom:4px}
+.card .sub{color:var(--text-dim);font-size:13px;margin-bottom:18px}
+
+.field{margin-bottom:18px}
+.field label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.field label .count{color:var(--text-dim);font-weight:400;font-family:'DM Mono',monospace;font-size:12px}
+textarea,input[type=text],input[type=number]{
+  width:100%;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;resize:vertical;
+  transition:.2s;
+}
+textarea:focus,input:focus{outline:none;border-color:var(--emerald)}
+textarea{min-height:90px}
+.field small{display:block;margin-top:6px;color:var(--text-dim);font-size:12px}
+
+.checklist{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.checklist{grid-template-columns:1fr}}
+.check-item{
+  display:flex;align-items:center;gap:10px;background:var(--bg-soft);border:1px solid var(--border);
+  padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13px;
+}
+.check-item input{width:16px;height:16px;accent-color:var(--emerald)}
+
+.analyze-bar{position:sticky;bottom:16px;margin-top:10px}
+
+/* Score panel */
+.score-wrap{text-align:center;padding:6px 0 10px}
+.score-ring{position:relative;width:170px;height:170px;margin:0 auto 14px}
+.score-ring svg{transform:rotate(-90deg);width:100%;height:100%}
+.score-ring .bg-ring{fill:none;stroke:var(--border);stroke-width:12}
+.score-ring .fg-ring{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 1s ease}
+.score-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-num .n{font-family:'Syne',sans-serif;font-size:42px;font-weight:800}
+.score-num .l{font-size:11px;color:var(--text-dim);letter-spacing:1px}
+.score-label{font-size:14px;font-weight:700;margin-bottom:2px}
+.score-tagline{color:var(--text-dim);font-size:13px;margin-bottom:16px}
+
+.breakdown{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.b-row{display:flex;flex-direction:column;gap:5px}
+.b-top{display:flex;justify-content:space-between;font-size:13px}
+.b-top .name{font-weight:600}
+.b-top .val{font-family:'DM Mono',monospace;color:var(--text-dim)}
+.bar{height:7px;background:var(--bg-soft);border-radius:100px;overflow:hidden}
+.bar-fill{height:100%;border-radius:100px;transition:width 1s ease}
+
+.tips-list{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.tip{
+  display:flex;gap:10px;padding:12px;background:var(--bg-soft);border:1px solid var(--border);
+  border-radius:10px;font-size:13px;
+}
+.tip .ico{flex-shrink:0;font-size:15px}
+.tip.locked{filter:blur(3.5px);user-select:none;pointer-events:none}
+.tip.good{border-left:3px solid var(--emerald)}
+.tip.warn{border-left:3px solid var(--gold)}
+.tip.bad{border-left:3px solid var(--danger)}
+
+.locked-wrap{position:relative}
+.lock-cta{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;background:linear-gradient(180deg,transparent,var(--card) 40%);
+}
+.lock-cta .icon{font-size:26px}
+.lock-cta p{font-size:13px;color:var(--text-dim);text-align:center;max-width:220px}
+
+/* AI Rewrite section */
+.ai-box{
+  margin-top:24px;padding:18px;border-radius:14px;border:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(139,124,246,.08),rgba(46,204,156,.05));
+}
+.ai-box h3{font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.ai-output{
+  background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;padding:14px;
+  font-size:13.5px;color:var(--text);white-space:pre-wrap;margin-top:10px;min-height:60px;
+}
+.ai-output.loading{color:var(--text-dim);font-style:italic}
+.copy-btn{margin-top:8px;font-size:12px;padding:6px 12px}
+
+/* Empty state */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  padding:50px 20px;color:var(--text-dim);
+}
+.empty-state .icon{font-size:38px;margin-bottom:14px;opacity:.6}
+
+/* Modals */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.active{display:flex}
+.modal{
+  background:var(--card-2);border:1px solid var(--border);border-radius:18px;max-width:500px;width:100%;
+  max-height:85vh;overflow-y:auto;padding:28px;position:relative;box-shadow:var(--shadow);
+}
+.modal h2{font-size:20px;margin-bottom:14px}
+.modal-close{
+  position:absolute;top:16px;right:16px;background:var(--bg-soft);border:1px solid var(--border);
+  width:32px;height:32px;border-radius:8px;color:var(--text);cursor:pointer;font-size:16px;
+}
+.modal p, .modal li{color:var(--text-dim);font-size:14px;margin-bottom:8px}
+.modal h4{font-size:14px;margin-top:16px;margin-bottom:6px;color:var(--gold-soft)}
+.modal ul,.modal ol{padding-left:20px;margin-bottom:10px}
+.price-box{
+  background:var(--bg-soft);border:1px solid var(--gold);border-radius:14px;padding:20px;text-align:center;margin:16px 0;
+}
+.price-box .amt{font-family:'Syne',sans-serif;font-size:34px;font-weight:800;color:var(--gold-soft)}
+.price-box .old{text-decoration:line-through;color:var(--text-dim);font-size:14px;margin-left:8px}
+.price-box .note{font-size:12px;color:var(--text-dim);margin-top:4px}
+.feat-list{list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+.feat-list li{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text)}
+.feat-list li:before{content:"✓";color:var(--emerald);font-weight:700}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:var(--card-2);border:1px solid var(--border);padding:12px 22px;border-radius:100px;
+  font-size:13px;z-index:300;transition:.3s;box-shadow:var(--shadow);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+footer{text-align:center;padding:40px 20px 10px;color:var(--text-dim);font-size:12px}
+footer a{color:var(--gold-soft);text-decoration:none}
+
+.spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.2);border-top-color:#1a1500;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">📈 <span>LinkedIn</span>&nbsp;Profile Optimizer</div>
+    <div class="header-btns">
+      <button class="btn btn-ghost" id="hindiGuideBtn">🇮🇳 Hindi Guide</button>
+      <button class="btn btn-gold" id="unlockBtnHeader">🔓 Unlock Full Report — ₹149</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="hero">
+    <div class="badge">⚡ IncomeAIHub Tool</div>
+    <h1>Score & fix your LinkedIn profile <em>in 60 seconds</em></h1>
+    <p>Paste your headline, about section, experience & skills — get an instant profile score, keyword gaps, and AI-rewritten headline & summary to attract more clients & recruiters.</p>
+    <div class="trust-row">
+      <span>🔒 One-time ₹149</span>
+      <span>🤖 AI-powered rewrite</span>
+      <span>🇮🇳 Hindi guide included</span>
+      <span>📄 No signup needed</span>
+    </div>
+  </div>
+
+  <div class="ad-slot">Advertisement — AdSense Slot (728x90)</div>
+
+  <div class="grid">
+    <!-- LEFT: INPUT FORM -->
+    <div class="card">
+      <h2>Your Profile Details</h2>
+      <div class="sub">Copy-paste directly from your LinkedIn profile for the most accurate score.</div>
+
+      <div class="field">
+        <label>Headline <span class="count" id="cnt-headline">0/220</span></label>
+        <input type="text" id="headline" maxlength="220" placeholder="e.g. Chartered Accountant | GST & Income Tax Expert | Helping MSMEs Save on Compliance">
+        <small>The line under your name — most viewed part of your profile.</small>
+      </div>
+
+      <div class="field">
+        <label>About / Summary <span class="count" id="cnt-about">0 words</span></label>
+        <textarea id="about" placeholder="Paste your About section here..." style="min-height:140px"></textarea>
+        <small>Aim for 150–300 words with a clear hook, value, and call to action.</small>
+      </div>
+
+      <div class="field">
+        <label>Experience Descriptions <span class="count" id="cnt-exp">0 words</span></label>
+        <textarea id="experience" placeholder="Paste bullet points / descriptions from your work experience section..." style="min-height:120px"></textarea>
+        <small>Include your current + most recent role descriptions.</small>
+      </div>
+
+      <div class="field">
+        <label>Skills (comma separated) <span class="count" id="cnt-skills">0 skills</span></label>
+        <textarea id="skills" placeholder="e.g. GST Filing, Tax Planning, Excel, Tally, Client Communication" style="min-height:70px"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Target Role / Keywords (optional)</label>
+        <input type="text" id="targetKeywords" placeholder="e.g. Freelance CA, Tax Consultant, Bookkeeping">
+        <small>We'll check if your profile is optimized for these search terms.</small>
+      </div>
+
+      <div class="field">
+        <label>Profile Completeness Checklist</label>
+        <div class="checklist">
+          <label class="check-item"><input type="checkbox" id="c-photo"> Profile photo added</label>
+          <label class="check-item"><input type="checkbox" id="c-banner"> Custom banner image</label>
+          <label class="check-item"><input type="checkbox" id="c-url"> Custom profile URL</label>
+          <label class="check-item"><input type="checkbox" id="c-featured"> Featured section filled</label>
+          <label class="check-item"><input type="checkbox" id="c-reco"> 1+ recommendation received</label>
+          <label class="check-item"><input type="checkbox" id="c-cert"> Certifications added</label>
+          <label class="check-item"><input type="checkbox" id="c-open"> Open to work / services set</label>
+          <label class="check-item"><input type="checkbox" id="c-activity"> Posted in last 30 days</label>
+        </div>
+      </div>
+
+      <div class="analyze-bar">
+        <button class="btn btn-emerald btn-block" id="analyzeBtn">⚡ Analyze My Profile</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: RESULTS -->
+    <div class="card" id="resultsCard">
+      <div class="empty-state" id="emptyState">
+        <div class="icon">📊</div>
+        <div>Fill in your details and click <strong>Analyze My Profile</strong> to see your score, breakdown, and improvement tips.</div>
+      </div>
+
+      <div id="resultsContent" style="display:none">
+        <div class="score-wrap">
+          <div class="score-ring">
+            <svg viewBox="0 0 120 120">
+              <circle class="bg-ring" cx="60" cy="60" r="52"></circle>
+              <circle class="fg-ring" id="scoreArc" cx="60" cy="60" r="52" stroke="url(#grad)"></circle>
+              <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#d4af37"/>
+                  <stop offset="100%" stop-color="#2ecc9c"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="score-num">
+              <div class="n" id="scoreNum">0</div>
+              <div class="l">/ 100</div>
+            </div>
+          </div>
+          <div class="score-label" id="scoreLabel">—</div>
+          <div class="score-tagline" id="scoreTagline">Analyze your profile to get started</div>
+        </div>
+
+        <div class="breakdown" id="breakdown"></div>
+
+        <div class="locked-wrap" id="tipsWrap">
+          <div class="tips-list" id="tipsList"></div>
+        </div>
+
+        <div class="ai-box" id="aiBox" style="display:none">
+          <h3>🤖 AI-Rewritten Headline & Summary</h3>
+          <div class="sub" style="margin-bottom:8px">Powered by Claude AI — optimized for your target keywords.</div>
+          <button class="btn btn-gold" id="generateAiBtn" style="width:100%;justify-content:center">✨ Generate AI Suggestions</button>
+          <div id="aiOutput" style="display:none" class="ai-output"></div>
+          <button class="btn btn-ghost copy-btn" id="copyAiBtn" style="display:none">📋 Copy Suggestions</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-slot">Advertisement — AdSense Slot (728x90)</div>
+</div>
+
+<!-- UNLOCK MODAL -->
+<div class="modal-overlay" id="unlockModal">
+  <div class="modal">
+    <button class="modal-close" id="closeUnlockModal">✕</button>
+    <h2>🔓 Unlock Full Report</h2>
+    <p>Get the complete score breakdown, all improvement tips, and AI-powered headline & summary rewrites — lifetime access, one device.</p>
+    <div class="price-box">
+      <span class="amt">₹149</span><span class="old">₹499</span>
+      <div class="note">One-time payment · Lifetime unlock on this device</div>
+    </div>
+    <ul class="feat-list">
+      <li>Full score breakdown across 6 categories</li>
+      <li>All improvement tips (unlimited)</li>
+      <li>AI-rewritten headline (3 variations)</li>
+      <li>AI-rewritten About / Summary section</li>
+      <li>Keyword gap analysis for target role</li>
+      <li>Unlimited re-analysis, anytime</li>
+    </ul>
+    <button class="btn btn-gold btn-block" id="payBtn">Pay ₹149 with Razorpay 🔒</button>
+    <p style="text-align:center;font-size:12px;margin-top:10px">Secure payment via Razorpay · GST invoice available</p>
+  </div>
+</div>
+
+<!-- HINDI GUIDE MODAL -->
+<div class="modal-overlay" id="hindiModal">
+  <div class="modal">
+    <button class="modal-close" id="closeHindiModal">✕</button>
+    <h2>🇮🇳 इस्तेमाल कैसे करें (Hindi Guide)</h2>
+    <h4>Step 1: प्रोफाइल डिटेल्स भरें</h4>
+    <p>अपने LinkedIn प्रोफाइल से Headline, About section, Experience descriptions और Skills copy-paste करें। जितनी सही जानकारी डालेंगे, स्कोर उतना ही सटीक (accurate) होगा।</p>
+    <h4>Step 2: Checklist पूरी करें</h4>
+    <p>Photo, Banner, Custom URL जैसे items अगर आपने पहले से LinkedIn पर सेट कर रखे हैं तो उन्हें tick करें।</p>
+    <h4>Step 3: "Analyze My Profile" पर क्लिक करें</h4>
+    <p>आपको तुरंत एक Score (0-100) मिलेगा, साथ ही 6 categories में breakdown — Headline, About, Experience, Skills, Completeness और Keywords।</p>
+    <h4>Step 4: Full Report Unlock करें (₹149)</h4>
+    <p>Free में सिर्फ overall score और top 2 tips दिखते हैं। पूरी report — सभी tips + AI से headline और about section की rewrite — पाने के लिए एक बार ₹149 pay करें। यह lifetime unlock है (इसी device पर)।</p>
+    <h4>Step 5: AI Suggestions इस्तेमाल करें</h4>
+    <p>Unlock करने के बाद "Generate AI Suggestions" पर क्लिक करें — आपको नया, आकर्षक Headline और About section मिलेगा जो आपके Target Keywords के हिसाब से optimize होगा। इसे copy करके सीधा LinkedIn पर paste कर सकते हैं।</p>
+    <h4>किसके लिए फायदेमंद?</h4>
+    <p>Freelancers, CA firms, Consultants, Job seekers — जो भी अपनी LinkedIn प्रोफाइल से ज़्यादा clients या interviews चाहते हैं।</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div>Built with ❤️ by <a href="#">M.Dev</a> · Part of <a href="#">IncomeAIHub</a></div>
+  <div style="margin-top:6px">Advertisement — AdSense Footer Slot</div>
+</footer>
+
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* =========================================================
+   CONFIG — replace with your actual project values
+   ========================================================= */
+const SUPABASE_URL = "https://YOUR-PROJECT-REF.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const RAZORPAY_KEY_ID = "rzp_live_YOUR_KEY_ID";
+const TOOL_ID = "linkedin-profile-optimizer";
+const PRICE_INR = 149;
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* =========================================================
+   DEVICE ID PERSISTENCE
+   ========================================================= */
+function getDeviceId(){
+  let id = localStorage.getItem('device_id');
+  if(!id){
+    id = 'dev_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem('device_id', id);
+  }
+  return id;
+}
+const deviceId = getDeviceId();
+let isUnlocked = localStorage.getItem(TOOL_ID + '_unlocked') === 'true';
+
+/* =========================================================
+   UTIL
+   ========================================================= */
+function $(id){ return document.getElementById(id); }
+function showToast(msg){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+function wordCount(str){
+  return (str.trim().match(/\S+/g) || []).length;
+}
+
+/* =========================================================
+   LIVE COUNTERS
+   ========================================================= */
+$('headline').addEventListener('input', e=>{
+  $('cnt-headline').textContent = `${e.target.value.length}/220`;
+});
+$('about').addEventListener('input', e=>{
+  $('cnt-about').textContent = `${wordCount(e.target.value)} words`;
+});
+$('experience').addEventListener('input', e=>{
+  $('cnt-exp').textContent = `${wordCount(e.target.value)} words`;
+});
+$('skills').addEventListener('input', e=>{
+  const n = e.target.value.split(',').map(s=>s.trim()).filter(Boolean).length;
+  $('cnt-skills').textContent = `${n} skills`;
+});
+
+/* =========================================================
+   SCORING ENGINE (rule-based, runs fully client-side)
+   ========================================================= */
+const ACTION_VERBS = ['led','managed','built','created','launched','improved','increased','reduced','achieved','delivered','developed','designed','implemented','optimized','generated','saved','grew','drove','negotiated','streamlined','automated','filed','advised','consulted','handled','executed','trained','mentored'];
+const WEAK_PHRASES = ['responsible for','worked on','helped with','duties included','tasked with'];
+
+function scoreHeadline(text){
+  let score = 0, tips = [];
+  const len = text.trim().length;
+  if(len === 0){
+    tips.push({type:'bad', msg:'Headline is empty — this is the most-viewed part of your profile. Add one immediately.'});
+    return {score:0, tips};
+  }
+  if(len < 30){ tips.push({type:'warn', msg:'Headline is quite short. Use more of the 220 characters to add keywords and value proposition.'}); score += 4; }
+  else if(len >= 30 && len < 100){ score += 9; tips.push({type:'good', msg:'Good headline length — room to add 1-2 more keywords if relevant.'}); }
+  else { score += 15; tips.push({type:'good', msg:'Great headline length, using space effectively.'}); }
+
+  if(/\|/.test(text) || /•/.test(text) || /·/.test(text)){
+    tips.push({type:'good', msg:'Headline uses separators (| or •) to pack in multiple keywords — recruiters scan this well.'});
+  } else {
+    tips.push({type:'warn', msg:'Consider using separators like " | " to list 2-3 distinct skills/roles in your headline.'});
+  }
+
+  if(/\b(help|helping|for|specializ)/i.test(text)){
+    tips.push({type:'good', msg:'Headline communicates value (who you help / specialization) — this converts well.'});
+  } else {
+    tips.push({type:'warn', msg:'Add a value statement — e.g. "Helping X achieve Y" — instead of just a job title.'});
+  }
+  return {score: Math.min(score,15), tips};
+}
+
+function scoreAbout(text){
+  let score = 0, tips = [];
+  const words = wordCount(text);
+  if(words === 0){
+    tips.push({type:'bad', msg:'About section is empty. This is where you tell your story — add 150+ words.'});
+    return {score:0, tips};
+  }
+  if(words < 80){ score += 6; tips.push({type:'warn', msg:`Only ${words} words. Aim for 150-300 words to fully explain your value.`}); }
+  else if(words < 150){ score += 12; tips.push({type:'good', msg:`${words} words — decent length, could expand a bit more.`}); }
+  else if(words <= 350){ score += 20; tips.push({type:'good', msg:`${words} words — excellent, thorough About section.`}); }
+  else { score += 14; tips.push({type:'warn', msg:`${words} words — quite long, consider trimming to keep readers engaged.`}); }
+
+  if(/\b(contact|reach out|dm|message|email|book a call)\b/i.test(text)){
+    tips.push({type:'good', msg:'About section includes a call-to-action — great for conversions.'});
+  } else {
+    tips.push({type:'warn', msg:'Add a call-to-action at the end — e.g. "Message me to discuss your project."'});
+  }
+
+  if(/\d/.test(text)){
+    tips.push({type:'good', msg:'Numbers/metrics found in About section — this builds credibility.'});
+  } else {
+    tips.push({type:'warn', msg:'Add specific numbers (years of experience, clients served, % improvement) for credibility.'});
+  }
+  return {score: Math.min(score,20), tips};
+}
+
+function scoreExperience(text){
+  let score = 0, tips = [];
+  const words = wordCount(text);
+  if(words === 0){
+    tips.push({type:'bad', msg:'No experience description provided. Add bullet points describing your achievements.'});
+    return {score:0, tips};
+  }
+  score += Math.min(8, Math.floor(words/40));
+
+  const lower = text.toLowerCase();
+  const verbCount = ACTION_VERBS.filter(v => lower.includes(v)).length;
+  if(verbCount >= 3){ score += 6; tips.push({type:'good', msg:`Found ${verbCount} strong action verbs (led, built, improved etc.) — great.`}); }
+  else if(verbCount >= 1){ score += 3; tips.push({type:'warn', msg:'Use more action verbs like "Led", "Built", "Increased" to start bullet points.'}); }
+  else { tips.push({type:'bad', msg:'No strong action verbs found. Start bullets with words like "Managed", "Delivered", "Achieved".'}); }
+
+  const weakCount = WEAK_PHRASES.filter(p => lower.includes(p)).length;
+  if(weakCount > 0){ tips.push({type:'warn', msg:'Avoid passive phrases like "responsible for" — replace with active achievements.'}); }
+  else { score += 3; }
+
+  if(/\d/.test(text)){ score += 3; tips.push({type:'good', msg:'Quantifiable results (numbers) found — this makes achievements concrete.'}); }
+  else { tips.push({type:'warn', msg:'Add numbers to your achievements — e.g. "Reduced turnaround time by 30%".'}); }
+
+  return {score: Math.min(score,20), tips};
+}
+
+function scoreSkills(text){
+  let score = 0, tips = [];
+  const skills = text.split(',').map(s=>s.trim()).filter(Boolean);
+  if(skills.length === 0){
+    tips.push({type:'bad', msg:'No skills listed. Add at least 5-10 relevant skills.'});
+    return {score:0, tips};
+  }
+  if(skills.length < 5){ score += 5; tips.push({type:'warn', msg:`Only ${skills.length} skills. LinkedIn allows up to 50 — add more relevant ones.`}); }
+  else if(skills.length <= 25){ score += 15; tips.push({type:'good', msg:`${skills.length} skills listed — good coverage.`}); }
+  else { score += 12; tips.push({type:'warn', msg:`${skills.length} skills — good, but prioritize your top 10 as "Featured Skills" on LinkedIn.`}); }
+  return {score: Math.min(score,15), tips};
+}
+
+function scoreCompleteness(){
+  const items = [
+    {id:'c-photo', label:'Profile photo', weight:4},
+    {id:'c-banner', label:'Banner image', weight:2},
+    {id:'c-url', label:'Custom URL', weight:2},
+    {id:'c-featured', label:'Featured section', weight:3},
+    {id:'c-reco', label:'Recommendations', weight:3},
+    {id:'c-cert', label:'Certifications', weight:2},
+    {id:'c-open', label:'Open to work/services', weight:2},
+    {id:'c-activity', label:'Recent activity', weight:2},
+  ];
+  let score = 0, tips = [];
+  items.forEach(it=>{
+    const checked = $(it.id).checked;
+    if(checked) score += it.weight;
+    else tips.push({type: it.weight >= 3 ? 'bad' : 'warn', msg:`Missing: ${it.label} — this impacts profile completeness & search ranking.`});
+  });
+  if(score >= 16) tips.unshift({type:'good', msg:'Strong profile completeness — LinkedIn favors fully-filled profiles in search.'});
+  return {score: Math.min(score,20), tips};
+}
+
+function scoreKeywords(headline, about, skills, target){
+  let score = 0, tips = [];
+  if(!target.trim()){
+    tips.push({type:'warn', msg:'Add target keywords to check if your profile is optimized for the roles/clients you want to attract.'});
+    return {score:5, tips};
+  }
+  const kws = target.split(',').map(k=>k.trim().toLowerCase()).filter(Boolean);
+  const haystack = (headline + ' ' + about + ' ' + skills).toLowerCase();
+  let found = 0;
+  kws.forEach(k=>{
+    if(k && haystack.includes(k)) found++;
+  });
+  const pct = kws.length ? found/kws.length : 0;
+  score = Math.round(pct * 10);
+  if(pct === 1){ tips.push({type:'good', msg:'All target keywords found in your profile — well optimized for search.'}); }
+  else if(pct >= 0.5){ tips.push({type:'warn', msg:`${found}/${kws.length} target keywords found. Add the missing ones to your headline/about/skills.`}); }
+  else { tips.push({type:'bad', msg:`Only ${found}/${kws.length} target keywords found. Your profile likely won't appear in recruiter/client searches for these terms.`}); }
+  return {score, tips};
+}
+
+function scoreLabel(total){
+  if(total >= 85) return {label:'Excellent', tag:'Your profile is highly optimized — small tweaks left.', color:'#2ecc9c'};
+  if(total >= 65) return {label:'Good', tag:'Solid profile — a few fixes will boost visibility.', color:'#d4af37'};
+  if(total >= 40) return {label:'Needs Work', tag:'Several gaps are limiting your profile\'s reach.', color:'#f2a154'};
+  return {label:'Weak', tag:'Major gaps — your profile is likely being skipped in search.', color:'#ff6b6b'};
+}
+
+/* =========================================================
+   ANALYZE
+   ========================================================= */
+let lastResult = null;
+
+$('analyzeBtn').addEventListener('click', ()=>{
+  const headline = $('headline').value;
+  const about = $('about').value;
+  const experience = $('experience').value;
+  const skills = $('skills').value;
+  const target = $('targetKeywords').value;
+
+  if(!headline.trim() && !about.trim() && !experience.trim()){
+    showToast('Please fill in at least Headline, About, or Experience.');
+    return;
+  }
+
+  const rH = scoreHeadline(headline);
+  const rA = scoreAbout(about);
+  const rE = scoreExperience(experience);
+  const rS = scoreSkills(skills);
+  const rC = scoreCompleteness();
+  const rK = scoreKeywords(headline, about, skills, target);
+
+  const total = rH.score + rA.score + rE.score + rS.score + rC.score + rK.score;
+
+  lastResult = {
+    total, headline: rH, about: rA, experience: rE, skills: rS, completeness: rC, keywords: rK
+  };
+
+  renderResults(lastResult);
+});
+
+function renderResults(r){
+  $('emptyState').style.display = 'none';
+  $('resultsContent').style.display = 'block';
+
+  // Score ring
+  const circumference = 2 * Math.PI * 52;
+  const arc = $('scoreArc');
+  arc.style.strokeDasharray = circumference;
+  const offset = circumference - (r.total/100) * circumference;
+  setTimeout(()=>{ arc.style.strokeDashoffset = offset; }, 100);
+  arc.style.strokeDashoffset = circumference;
+
+  $('scoreNum').textContent = r.total;
+  const info = scoreLabel(r.total);
+  $('scoreLabel').textContent = info.label;
+  $('scoreLabel').style.color = info.color;
+  $('scoreTagline').textContent = info.tag;
+
+  // Breakdown
+  const cats = [
+    {name:'Headline', score:r.headline.score, max:15, color:'#d4af37'},
+    {name:'About / Summary', score:r.about.score, max:20, color:'#8b7cf6'},
+    {name:'Experience', score:r.experience.score, max:20, color:'#2ecc9c'},
+    {name:'Skills', score:r.skills.score, max:15, color:'#d4af37'},
+    {name:'Completeness', score:r.completeness.score, max:20, color:'#8b7cf6'},
+    {name:'Keyword Match', score:r.keywords.score, max:10, color:'#2ecc9c'},
+  ];
+  $('breakdown').innerHTML = cats.map(c=>`
+    <div class="b-row">
+      <div class="b-top"><span class="name">${c.name}</span><span class="val">${c.score}/${c.max}</span></div>
+      <div class="bar"><div class="bar-fill" style="width:0%;background:${c.color}" data-w="${(c.score/c.max)*100}"></div></div>
+    </div>
+  `).join('');
+  setTimeout(()=>{
+    document.querySelectorAll('.bar-fill').forEach(el=>{
+      el.style.width = el.getAttribute('data-w') + '%';
+    });
+  }, 150);
+
+  // Tips
+  const allTips = [
+    ...r.headline.tips, ...r.about.tips, ...r.experience.tips,
+    ...r.skills.tips, ...r.completeness.tips, ...r.keywords.tips
+  ];
+  // sort: bad first, then warn, then good
+  const order = {bad:0, warn:1, good:2};
+  allTips.sort((a,b)=> order[a.type]-order[b.type]);
+
+  const icons = {bad:'⚠️', warn:'💡', good:'✅'};
+  const visibleCount = isUnlocked ? allTips.length : 2;
+
+  $('tipsList').innerHTML = allTips.map((t,i)=>{
+    const locked = i >= visibleCount;
+    return `<div class="tip ${t.type} ${locked?'locked':''}"><span class="ico">${icons[t.type]}</span><span>${t.msg}</span></div>`;
+  }).join('');
+
+  const wrap = $('tipsWrap');
+  const existingCta = wrap.querySelector('.lock-cta');
+  if(existingCta) existingCta.remove();
+
+  if(!isUnlocked && allTips.length > visibleCount){
+    const cta = document.createElement('div');
+    cta.className = 'lock-cta';
+    cta.innerHTML = `
+      <div class="icon">🔒</div>
+      <p><strong>${allTips.length - visibleCount} more tips</strong> are locked. Unlock the full report for ₹149.</p>
+      <button class="btn btn-gold" onclick="openUnlockModal()">Unlock Full Report</button>
+    `;
+    wrap.appendChild(cta);
+  }
+
+  // AI box
+  $('aiBox').style.display = 'block';
+  if(!isUnlocked){
+    $('generateAiBtn').textContent = '🔒 Unlock to Generate AI Suggestions';
+    $('generateAiBtn').onclick = openUnlockModal;
+  } else {
+    $('generateAiBtn').textContent = '✨ Generate AI Suggestions';
+    $('generateAiBtn').onclick = generateAiSuggestions;
+  }
+}
+
+/* =========================================================
+   AI SUGGESTIONS (via Supabase Edge Function -> Claude API proxy)
+   ========================================================= */
+async function generateAiSuggestions(){
+  if(!lastResult){ showToast('Analyze your profile first.'); return; }
+  const btn = $('generateAiBtn');
+  const out = $('aiOutput');
+  out.style.display = 'block';
+  out.classList.add('loading');
+  out.textContent = 'Generating AI-optimized headline & summary...';
+  btn.disabled = true;
+
+  const headline = $('headline').value;
+  const about = $('about').value;
+  const experience = $('experience').value;
+  const skills = $('skills').value;
+  const target = $('targetKeywords').value;
+
+  const prompt = `You are a LinkedIn branding expert for Indian freelancers and professionals.
+Current headline: "${headline}"
+Current about section: "${about}"
+Experience highlights: "${experience}"
+Skills: "${skills}"
+Target role/keywords: "${target || 'general professional growth'}"
+
+Give me:
+1. Three rewritten LinkedIn headline options (each under 220 characters, keyword-rich, value-driven)
+2. One rewritten About section (180-250 words, engaging hook, first person, ends with a call to action)
+
+Keep it India-context appropriate. Format clearly with headers.`;
+
+  try{
+    const { data, error } = await sb.functions.invoke('ai-proxy', {
+      body: { prompt, tool: TOOL_ID }
+    });
+    if(error) throw error;
+    const text = data?.content?.[0]?.text || data?.text || 'Could not generate suggestions. Please try again.';
+    out.classList.remove('loading');
+    out.textContent = text;
+    $('copyAiBtn').style.display = 'inline-flex';
+  } catch(err){
+    console.error(err);
+    out.classList.remove('loading');
+    out.textContent = 'Error generating suggestions. Please check your connection and try again, or contact support.';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+$('copyAiBtn').addEventListener('click', ()=>{
+  navigator.clipboard.writeText($('aiOutput').textContent);
+  showToast('Copied to clipboard ✅');
+});
+
+/* =========================================================
+   UNLOCK / MODALS
+   ========================================================= */
+function openUnlockModal(){ $('unlockModal').classList.add('active'); }
+function closeUnlockModal(){ $('unlockModal').classList.remove('active'); }
+$('unlockBtnHeader').addEventListener('click', openUnlockModal);
+$('closeUnlockModal').addEventListener('click', closeUnlockModal);
+$('unlockModal').addEventListener('click', e=>{ if(e.target.id==='unlockModal') closeUnlockModal(); });
+
+$('hindiGuideBtn').addEventListener('click', ()=> $('hindiModal').classList.add('active'));
+$('closeHindiModal').addEventListener('click', ()=> $('hindiModal').classList.remove('active'));
+$('hindiModal').addEventListener('click', e=>{ if(e.target.id==='hindiModal') $('hindiModal').classList.remove('active'); });
+
+/* =========================================================
+   RAZORPAY PAYMENT FLOW
+   ========================================================= */
+async function checkUnlockStatus(){
+  try{
+    const { data, error } = await sb.functions.invoke('check-unlock', {
+      body: { device_id: deviceId, tool: TOOL_ID }
+    });
+    if(!error && data?.unlocked){
+      isUnlocked = true;
+      localStorage.setItem(TOOL_ID + '_unlocked', 'true');
+    }
+  } catch(err){ console.error('check-unlock failed', err); }
+}
+
+async function startPayment(){
+  const payBtn = $('payBtn');
+  payBtn.disabled = true;
+  payBtn.innerHTML = '<span class="spinner"></span> Creating order...';
+
+  try{
+    const { data: orderData, error: orderErr } = await sb.functions.invoke('create-order', {
+      body: { amount: PRICE_INR * 100, currency: 'INR', device_id: deviceId, tool: TOOL_ID }
+    });
+    if(orderErr) throw orderErr;
+
+    const options = {
+      key: RAZORPAY_KEY_ID,
+      amount: PRICE_INR * 100,
+      currency: 'INR',
+      name: 'IncomeAIHub',
+      description: 'LinkedIn Profile Optimizer — Full Report Unlock',
+      order_id: orderData.order_id,
+      handler: async function(response){
+        const { data: verifyData, error: verifyErr } = await sb.functions.invoke('verify-payment', {
+          body: {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            device_id: deviceId,
+            tool: TOOL_ID
+          }
+        });
+        if(!verifyErr && verifyData?.success){
+          isUnlocked = true;
+          localStorage.setItem(TOOL_ID + '_unlocked', 'true');
+          showToast('Payment successful! Full report unlocked 🎉');
+          closeUnlockModal();
+          if(lastResult) renderResults(lastResult);
+        } else {
+          showToast('Payment verification failed. Contact support if amount was deducted.');
+        }
+      },
+      prefill: {},
+      theme: { color: '#d4af37' }
+    };
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function(){
+      showToast('Payment failed. Please try again.');
+    });
+    rzp.open();
+  } catch(err){
+    console.error(err);
+    showToast('Could not start payment. Please try again.');
+  } finally {
+    payBtn.disabled = false;
+    payBtn.innerHTML = 'Pay ₹149 with Razorpay 🔒';
+  }
+}
+$('payBtn').addEventListener('click', startPayment);
+
+/* =========================================================
+   INIT
+   ========================================================= */
+checkUnlockStatus();
+</script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
+</html>
